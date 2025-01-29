@@ -1,4 +1,12 @@
+'use client';
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 const Filter = () => {
+    const pathName = usePathname();
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+
     return (
         <div className="mt-12 flex justify-between">
             <div className="flex gap-6 flex-wrap">
@@ -22,7 +30,7 @@ const Filter = () => {
                     placeholder="Max Price"
                     className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
                 />
-                <select
+                {/* <select
                     name="type"
                     id=""
                     className="py-2 px-2 rounded-xl text-xs font-medium bg-[#EBEDED]"
@@ -37,7 +45,7 @@ const Filter = () => {
                 >
                     <option value="">Color</option>
                     <option value="">Test</option>
-                </select>
+                </select> */}
                 <select
                     name="type"
                     id=""

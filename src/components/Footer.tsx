@@ -9,7 +9,7 @@ const Footer = () => {
                 {/* LEFT  */}
                 <div className="w-full md:w-1/2 lg:w-1/4 flex flex-col gap-8">
                     <Link href="/">
-                        <div className="text-xl tracking-wide">LAMA</div>
+                        <div className="text-xl tracking-wide">DAISY</div>
                     </Link>
                     <p>
                         Jalan Merdeka Raya No. 3232, Kecamatan Gambir, Jakarta Pusat, DKI Jakarta,
