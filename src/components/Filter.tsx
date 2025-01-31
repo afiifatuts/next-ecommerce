@@ -7,6 +7,14 @@ const Filter = () => {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
 
+    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+        const { name, value } = e.target;
+        // console.log(name, value);
+        const params = new URLSearchParams(searchParams);
+        params.set(name, value);
+        replace(`${pathName}?${params.toString()}`);
+    };
+
     return (
         <div className="mt-12 flex justify-between">
             <div className="flex gap-6 flex-wrap">
@@ -14,6 +22,7 @@ const Filter = () => {
                     name="type"
                     id=""
                     className="py-2 px-2 rounded-xl text-xs font-medium bg-[#EBEDED]"
+                    onChange={handleFilterChange}
                 >
                     <option value="physical">Physical</option>
                     <option value="digital">Digital</option>
@@ -23,12 +32,14 @@ const Filter = () => {
                     name="min"
                     placeholder="Min Price"
                     className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
+                    onChange={handleFilterChange}
                 />
                 <input
                     type="text"
                     name="max"
                     placeholder="Max Price"
                     className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
+                    onChange={handleFilterChange}
                 />
                 {/* <select
                     name="type"
@@ -47,9 +58,10 @@ const Filter = () => {
                     <option value="">Test</option>
                 </select> */}
                 <select
-                    name="type"
+                    name="cat"
                     id=""
                     className="py-2 px-2 rounded-xl text-xs font-medium bg-[#EBEDED]"
+                    onChange={handleFilterChange}
                 >
                     <option value="">Category</option>
                     <option value="new">New Arrival</option>
@@ -58,15 +70,16 @@ const Filter = () => {
             </div>
             <div className="">
                 <select
-                    name="type"
+                    name="sort"
                     id=""
                     className="py-2 px-2 rounded-xl text-xs font-medium bg-[#EBEDED]"
+                    onChange={handleFilterChange}
                 >
-                    <option value="">Sort By</option>
-                    <option value="">Price (low to high)</option>
-                    <option value="">Price (high to low)</option>
-                    <option value="">Newest</option>
-                    <option value="">Oldest</option>
+                    <option>Sort By</option>
+                    <option value="asc price">Price (low to high)</option>
+                    <option value="desc price">Price (high to low)</option>
+                    <option value="asc lastUpdated">Newest</option>
+                    <option value="desc lastUpdated">Oldest</option>
                 </select>
             </div>
         </div>
