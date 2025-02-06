@@ -2,7 +2,7 @@
 
 import { useWixClient } from '@/hooks/useWixClient';
 import { LoginState } from '@wix/sdk';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 
@@ -10,14 +10,16 @@ enum MODE {
     LOGIN = 'LOGIN',
     REGISTER = 'REGISTER',
     RESET_PASSWORD = 'RESET_PASSWORD',
-    EMAIL_VERIFICATION = 'EMAIL_VERIFACATION',
+    EMAIL_VERIFICATION = 'EMAIL_VERIFICATION',
 }
 
 const LoginPage = () => {
     const wixClient = useWixClient();
     const router = useRouter();
+    const pathName = usePathname();
 
     const isLoggedIn = wixClient.auth.loggedIn();
+    console.log(isLoggedIn);
 
     if (isLoggedIn) {
         router.push('/');
@@ -63,6 +65,8 @@ const LoginPage = () => {
                         email,
                         password,
                     });
+                    console.log(response, 'aaa');
+
                     break;
                 case MODE.REGISTER:
                     response = await wixClient.auth.register({
@@ -74,7 +78,8 @@ const LoginPage = () => {
                 case MODE.RESET_PASSWORD:
                     response = await wixClient.auth.sendPasswordResetEmail(
                         email,
-                        window.location.href,
+                        // window.location.href,
+                        pathName,
                     );
                     setMessage('Password reset email sent. Please check your e-mail.');
                     break;
@@ -89,6 +94,7 @@ const LoginPage = () => {
 
             switch (response?.loginState) {
                 case LoginState.SUCCESS:
+                    console.log(response);
                     setMessage('Successfully! You are being redirected');
                     const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
                         response.data.sessionToken,
@@ -99,7 +105,7 @@ const LoginPage = () => {
                     });
                     wixClient.auth.setTokens(tokens);
                     router.push('/');
-                    break;
+                    break; // Tambahkan break untuk mencegah eksekusi lanjut ke case lainnya
 
                 case LoginState.FAILURE:
                     if (
@@ -114,10 +120,16 @@ const LoginPage = () => {
                     } else {
                         setError('Something went wrong!');
                     }
+                    break; // Tambahkan break
+
                 case LoginState.EMAIL_VERIFICATION_REQUIRED:
                     setMode(MODE.EMAIL_VERIFICATION);
+                    break; // Tambahkan break
+
                 case LoginState.OWNER_APPROVAL_REQUIRED:
                     setMessage('Your account is pending approval');
+                    break; // Tambahkan break
+
                 default:
                     break;
             }

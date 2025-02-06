@@ -5,21 +5,37 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import CartModal from './CartModal';
+import { useWixClient } from '@/hooks/useWixClient';
 
 const NavIcons = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     const router = useRouter();
+    const wixClient = useWixClient();
+    const isLoggedIn = wixClient.auth.loggedIn();
+    console.log(isLoggedIn);
 
     //TEMPORARY
-    const isLoggedIn = false;
 
     const handleProfile = () => {
         if (!isLoggedIn) {
             router.push('/login');
         }
         setIsProfileOpen(prev => !prev);
+    };
+    // AUTH WITH WIX-MANAGED AUTH
+
+    const login = async () => {
+        const loginRequestData = wixClient.auth.generateOAuthData(
+            'https://bf86-103-82-14-52.ngrok-free.app/',
+        );
+
+        console.log(loginRequestData);
+
+        localStorage.setItem('oAuthRedirectData', JSON.stringify(loginRequestData));
+        const { authUrl } = await wixClient.auth.getAuthUrl(loginRequestData);
+        window.location.href = authUrl;
     };
 
     return (
@@ -31,6 +47,7 @@ const NavIcons = () => {
                 height={22}
                 className="cursor-pointer"
                 onClick={handleProfile}
+                // onClick={login}
             />
             {isProfileOpen && (
                 <div className="absolute p-4 rounded-md top-12 left-0 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
